@@ -30,4 +30,4 @@ jobs:
         DigitalOcean__ApiKey: ${{ secrets.API_KEY }}
       run: dotnet test --no-build -e DigitalOcean__ApiKey=$DigitalOcean__ApiKey --verbosity normal
     - name: Pack
-      run: dotnet pack -c Release --verbosity normal
+      run: dotnet pack -c Release ./DigitalOcean.Client.Extensions/DigitalOcean.Client.Extensions.csproj 
