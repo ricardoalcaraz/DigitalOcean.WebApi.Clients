@@ -24,10 +24,10 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build -c Release --no-restore
     - name: Test
       env: # Or as an environment variable
         DigitalOcean__ApiKey: ${{ secrets.API_KEY }}
-      run: dotnet test --no-build -e DigitalOcean__ApiKey=$DigitalOcean__ApiKey --verbosity normal
+      run: dotnet test --no-build -c Release -e DigitalOcean__ApiKey=$DigitalOcean__ApiKey --verbosity normal
     - name: Pack
       run: dotnet pack -c Release ./DigitalOcean.Client.Extensions/DigitalOcean.Client.Extensions.csproj 
