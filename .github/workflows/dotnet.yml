@@ -25,4 +25,4 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test -e DigitalOcean__ApiKey=${{API_KEY}} --no-build --verbosity normal
+      run: dotnet test -e DigitalOcean__ApiKey=${{ env.API_KEY }} --no-build --verbosity normal
