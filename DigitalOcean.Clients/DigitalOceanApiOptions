@@ -1,0 +1,6 @@
+public record DigitalOceanApiOptions
+{
+    public bool IsEnabled {get; set;}
+
+    public string? ApiKey {get; set;}
+}
