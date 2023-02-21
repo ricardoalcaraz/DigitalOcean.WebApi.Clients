@@ -1,8 +1,10 @@
+using System.Net.Http.Headers;
 using DigitalOcean.Clients;
 using DigitalOcean.Clients.Clients;
 using DigitalOcean.Clients.Http;
 using DigitalOcean.Clients.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace DigitalOcean.Client.Extensions;
 
@@ -11,8 +13,11 @@ public static class WebApplicationExtensions {
         DigitalOceanApiOptions digitalOceanOptions = new ();
         configureOptions?.Invoke(digitalOceanOptions);
         builder.AddHttpClient<IConnection, Connection>("DigitalOcean")
-            .ConfigureHttpClient(c => {
+            .ConfigureHttpClient((sp, c) => {
                 c.BaseAddress = new Uri(DigitalOceanClient.DIGITAL_OCEAN_API_URL);
+                var options = sp.GetRequiredService<IOptions<DigitalOceanApiOptions>>().Value;
+                c.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", options.ApiKey);
             });
 
         builder.AddTransient<IAccountClient, AccountClient>();
@@ -28,14 +33,9 @@ public static class WebApplicationExtensions {
         return builder;
     }
     public static WebApplicationBuilder AddDigitalOcean(this WebApplicationBuilder builder, Action<DigitalOceanApiOptions>? config = null) {
-        if (builder.Configuration.GetValue<bool>("DigitalOcean:IsEnabled")) {
-            builder.Services.AddDigitalOcean();
-            builder.Services.Configure<DigitalOceanApiOptions>(opt => {
-                config?.Invoke(opt);
-                opt.ApiKey ??= builder.Configuration["DigitalOcean:ApiKey"];
-            });;
-
-        }
+        builder.Services.AddDigitalOcean();
+        builder.Services.AddOptions<DigitalOceanApiOptions>()
+            .BindConfiguration("DigitalOcean");
 
         return builder;
     }
