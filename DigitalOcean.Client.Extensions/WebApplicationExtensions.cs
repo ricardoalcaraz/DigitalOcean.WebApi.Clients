@@ -32,6 +32,10 @@ public static class WebApplicationExtensions {
         builder.AddTransient<IFloatingIpActionsClient, FloatingIpActionsClient>();
         return builder;
     }
+    
+    /// <summary>
+    /// Add all required services needed to use digital ocean client
+    /// </summary>
     public static WebApplicationBuilder AddDigitalOcean(this WebApplicationBuilder builder, Action<DigitalOceanApiOptions>? config = null) {
         builder.Services.AddDigitalOcean();
         builder.Services.AddOptions<DigitalOceanApiOptions>()
